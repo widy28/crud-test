@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Tour Lead CRUD Test</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+        <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css"
+        rel="stylesheet" type="text/css">
+        <link href="http://pingendo.github.io/pingendo-bootstrap/themes/default/bootstrap.css"
+        rel="stylesheet" type="text/css">
+        <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/flatly/bootstrap.min.css"
+        rel="stylesheet" type="text/css">
+    </head>
+
+    <body>
+        <div class="section ">
+            <div class="container ">
+                <div class="row ">
+                    <div class="col-md-12 ">
+                        <ul class="breadcrumb ">
+                            <li>
+                                <a href="# ">Home</a>
+                            </li>
+                            <li>
+                                <a href="# ">Tour Leads</a>
+                            </li>
+                            <li class="active ">Add Lead</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col-md-12 ">
+                        <form class="form-horizontal " role="form " action="/leads/addlead/" method="post">
+                            {% csrf_token %}
+                                    {% for field in form %}
+                                        {% if field.is_hidden %}
+                                            {{ field }}
+                                        {% else %}
+                                            <span class="control-group {% if field.errors %}error{% endif %}">
+                                                {{ field.label_tag }}
+                                                {{ field }}
+
+                                                {% for error in field.errors %}
+                                                    <ul class="help-block">
+                                                        <li>{{ error }}</li>
+                                                    </ul>
+                                                {% endfor %}
+                                                <hr/>
+                                            </span>
+                                        {% endif %}
+                                    {% endfor %}
+                            <div class="form-group ">
+                                <div class="col-sm-offset-2 col-sm-10 ">
+                                    <button type="submit " class="btn btn-default ">
+                                        <i class="fa fa-save fa-fw "></i>Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>
