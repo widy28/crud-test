@@ -1,9 +1,10 @@
 from django.views.generic import TemplateView, DetailView
-from models import Leads, LeadsForm
+from models import Leads, LeadsForm, Languages
 from django.shortcuts import render
 from django.http import (HttpResponseRedirect,
                          HttpResponse, HttpResponseBadRequest, Http404)
 from django.core.urlresolvers import reverse
+from django.forms import inlineformset_factory
 
 
 class LeadsList(TemplateView):
@@ -27,7 +28,11 @@ class AddLeadView(TemplateView):
     def post(self, request, *args, **kwargs):
 
         self.form = self.form_class(self.request.POST)
-        print self.form.is_valid(),'-------'
+        # languagefromset = inlineformset_factory(Leads, Languages, fields=('languages',))
+        # print languagefromset,'======================='
+        # print self.form.is_valid(),'-------'
+        # f = languagefromset(request.POST, request.FILES, )
+        # print f,'---------------'
         if self.form.is_valid():
             print '11111111111'
             data = self.form.cleaned_data

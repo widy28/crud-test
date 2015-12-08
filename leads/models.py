@@ -1,16 +1,22 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 from django import forms
 import datetime
+from django.utils.safestring import mark_safe
+from django.forms.extras.widgets import SelectDateWidget
+
+
 
 # Create your models here.
+
+class Languages(models.Model):
+    # lead = models.ForeignKey(Leads, on_delete=models.CASCADE)
+    languages = models.CharField(verbose_name='Languages', max_length=20, default='English')
+
 class Leads(models.Model):
     name = models.CharField(verbose_name='Name', max_length=50)
-    GENDER_CHOICES = (
-        ('1', 'M'),
-        ('2', 'S'),
-    )
-    gender = models.CharField(verbose_name='Gender', choices=GENDER_CHOICES, max_length=2)
-    languages = models.CharField(verbose_name='Languages', max_length=20, default='English')
+    gender = models.CharField(verbose_name='Gender', max_length=2)
+    languages = models.ForeignKey(Languages)
     card_number = models.CharField(verbose_name='Card number', max_length=15)
     expiry_date = models.DateField(verbose_name='Expiry date')
     professional = models.BooleanField(verbose_name='Professional')
@@ -19,17 +25,37 @@ class Leads(models.Model):
         return self.name
 
 
+
+
+
+class HorizRadioRenderer(forms.RadioSelect.renderer):
+    def render(self):
+            return mark_safe(u'\n'.join([u'%s\n' % w for w in self]))
+
+
 class LeadsForm(forms.ModelForm):
     name = forms.CharField(required=False, label='Name', max_length=50)
     GENDER_CHOICES = (
-        ('1', 'M'),
-        ('2', 'S'),
+        ('1', 'Male'),
+        ('2', 'Female'),
     )
-    gender = forms.ChoiceField(required=False, label='Gender', choices=GENDER_CHOICES, widget=forms.RadioSelect(), help_text='g')
+    gender = forms.CharField(required=False, label='Gender',
+                             widget=forms.RadioSelect(
+                                 renderer=HorizRadioRenderer,
+                                 choices=GENDER_CHOICES))
     languages = forms.CharField(required=False, label='Languages', max_length=20, help_text='l')
     card_number = forms.CharField(required=False, label='Card number', max_length=15, help_text='c')
-    expiry_date = forms.DateField(required=False, label='Expiry date', initial=datetime.date.today, help_text='e')
-    professional = forms.BooleanField(required=False, label='Professional', help_text='p')
+    expiry_date = forms.DateField(required=False, label='Expiry date', initial=datetime.date.today,
+                                  widget=SelectDateWidget(years=range(2015, 2150)))
+
+    PROFESSIONAL_CHOICES = (
+        ('yes', 'YES'),
+        ('no', 'NO')
+    )
+    professional = forms.BooleanField(required=False, label='Professional',
+                                      widget=forms.RadioSelect(
+                                          renderer=HorizRadioRenderer,
+                                          choices=PROFESSIONAL_CHOICES))
     class Meta:
         model = Leads
-        fields = '__all__'
+        fields = ['name', 'gender', 'card_number', 'expiry_date', 'professional', 'languages']
