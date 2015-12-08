@@ -8,24 +8,21 @@ from django.forms.extras.widgets import SelectDateWidget
 
 
 # Create your models here.
-
-class Languages(models.Model):
-    # lead = models.ForeignKey(Leads, on_delete=models.CASCADE)
-    languages = models.CharField(verbose_name='Languages', max_length=20, default='English')
-
 class Leads(models.Model):
     name = models.CharField(verbose_name='Name', max_length=50)
     gender = models.CharField(verbose_name='Gender', max_length=2)
-    languages = models.ForeignKey(Languages)
+    languages = models.CharField(verbose_name='Languages', max_length=20, default='English')
     card_number = models.CharField(verbose_name='Card number', max_length=15)
     expiry_date = models.DateField(verbose_name='Expiry date')
-    professional = models.BooleanField(verbose_name='Professional')
+    professional = models.CharField(verbose_name='Professional', max_length=5)
 
     def __unicode__(self):
         return self.name
 
 
-
+# class Languages(models.Model):
+#     leads = models.ForeignKey(Leads)
+#     languages = models.CharField(verbose_name='Languages', max_length=20, default='English')
 
 
 class HorizRadioRenderer(forms.RadioSelect.renderer):
@@ -36,8 +33,8 @@ class HorizRadioRenderer(forms.RadioSelect.renderer):
 class LeadsForm(forms.ModelForm):
     name = forms.CharField(required=False, label='Name', max_length=50)
     GENDER_CHOICES = (
-        ('1', 'Male'),
-        ('2', 'Female'),
+        ('M', 'Male'),
+        ('F', 'Female'),
     )
     gender = forms.CharField(required=False, label='Gender',
                              widget=forms.RadioSelect(
@@ -49,13 +46,14 @@ class LeadsForm(forms.ModelForm):
                                   widget=SelectDateWidget(years=range(2015, 2150)))
 
     PROFESSIONAL_CHOICES = (
-        ('yes', 'YES'),
-        ('no', 'NO')
+        ('Y', 'YES'),
+        ('N', 'NO')
     )
-    professional = forms.BooleanField(required=False, label='Professional',
-                                      widget=forms.RadioSelect(
-                                          renderer=HorizRadioRenderer,
-                                          choices=PROFESSIONAL_CHOICES))
+    professional = forms.CharField(required=False, label='Professional',
+                                   widget=forms.RadioSelect(
+                                       renderer=HorizRadioRenderer,
+                                       choices=PROFESSIONAL_CHOICES))
     class Meta:
         model = Leads
-        fields = ['name', 'gender', 'card_number', 'expiry_date', 'professional', 'languages']
+        # fields = ['name', 'gender', 'card_number', 'expiry_date', 'professional', 'languages']
+        fields = '__all__'

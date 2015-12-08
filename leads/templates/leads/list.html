@@ -13,6 +13,12 @@
         rel="stylesheet" type="text/css">
         <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/flatly/bootstrap.min.css"
         rel="stylesheet" type="text/css">
+        <script>
+
+            $function()
+
+
+        </script>
     </head>
     
     <body>
@@ -75,18 +81,18 @@
                                 {% for lead in leads %}
                                 <tr>
                                     <td>
-                                        <input type="checkbox">
+                                        <input id="{{ lead.id }}" type="checkbox">
                                     </td>
                                     <td>
                                         <a href="# ">Edit</a>|
-                                        <a href="# ">Delete</a>
+                                        <a href="/leads/delete/{{ lead.id }} ">Delete</a>
                                     </td>
                                     <td>
                                         <a href="#details">{{ lead.name }}</a>
                                     </td>
                                     <td>{{ lead.gender }}</td>
                                     <td>{{ lead.card_number}}</td>
-                                    <td>{{ lead.expiry_date }}</td>
+                                    <td>{{ lead.expiry_date|date:"Y-m-d" }}</td>
                                     <td>{{ lead.languages }}</td>
                                     <td>{{ lead.professional }}</td>
                                 </tr>
